@@ -33,7 +33,10 @@ for ($i=0;$i<count($columns);$i++) {
 // create SQL based on HTTP method
 switch ($method) {
     case 'GET':
-        $sql = "select * from `$table`".($key?" WHERE id=$key":''); break;
+        // cant get all to big for select box
+//        $sql = "select * from `$table`".($key?" WHERE id=$key":''); break;
+        // select only nl for now
+        $sql = "SELECT * FROM `cities` WHERE `country` = 'NL' "; break;
     case 'PUT':
         $sql = "update `$table` set $set where id=$key"; break;
     case 'POST':
