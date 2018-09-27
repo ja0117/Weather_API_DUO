@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class='use-all-space'>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset='UTF-8'>
+    <title>TomTom JavaScript SDK - Map events - on click support</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <link rel='stylesheet' type='text/css' href='sdk/map.css'/>
+    <link rel='stylesheet' type='text/css' href='elements.css'/>
+    <script type='text/javascript' src='js/form.js'></script>
+    <script type='text/javascript' src='sdk/tomtom.min.js'></script>
+
+    <script
+              src="https://code.jquery.com/jquery-3.3.1.js"
+              integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+              crossorigin="anonymous"></script>
+
+              <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <style type="text/css">
+    body {
+        height: 200%;
+    }
+        .container {
+            height: 50%;
+            width: 50%;
+        }
+    </style>
+</head>
+<body class='container'>
+    <div id='map' class='container'></div>
+    <div id="chart_div_lines"></div>
+        <div id="chart_div"></div>
+    <script>
+        // Define your product name and version
+        tomtom.setProductInfo('MapsWebSDKExamplesSelfhosted', '4.36.5-SNAPSHOT');
+        var map = tomtom.map('map', {
+            key: 'LyPySUFG3Ufa94OncCftiJxKO8cFEx08',
+            center: [52.373154, 4.890659],
+            zoom: 8,
+            source: 'vector',
+            basePath: '/sdk'
+        });
+
+
+        // show an informational popup
+        tomtom.L.popup().setLatLng([52.373154, 4.890659])
+            .setContent('Click anywhere on the map to lookup the clicked lat lon.').openOn(map);
+
+        map.on('click', function(e) {
+            tomtom.L.popup().setLatLng(e.latlng).setContent(e.latlng.toString()).openOn(map);
+
+            var url = "http://api.openweathermap.org/data/2.5/forecast?lat="+e.latlng['lat']+"&lon="+e.latlng['lng']+"&APPID=0c9d7a006a838a322f66170b9a7ff62c&units=metric&lang=nl";
+            $.ajax({
+                method: "GET",
+                url: url,
+            }).then(function (resp) {
+                // console.log(resp);
+                console.log(resp.list[0].main.temp);
+                var resp = resp;
+
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
+
+            // Set a callback to run when the Google Visualization API is loaded.
+            google.charts.setOnLoadCallback(drawChart);
+            // Callback that creates and populates a data table,
+            // instantiates the pie chart, passes in the data and
+            // draws it.
+
+            function drawChart() {
+
+                // Create the data table.
+                
+                for (var j = 0; j < 50; j++) {
+                    var temp = resp.list[j].main.temp;
+                    console.log(temp);
+                    var data = new google.visualization.DataTable([
+                        [temp],
+                    ]);
+                }
+
+                // Set chart options
+                var options = {'title':'weather in 5 days Zwolle',
+                    'width':1400,
+                    'height':400
+                };
+
+                // Instantiate and draw our chart, passing in some options.
+                var Linechart = new google.visualization.LineChart(document.getElementById('chart_div_lines'));
+                var SteppedAreaChart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+                Linechart.draw(data, options);
+                SteppedAreaChart.draw(data, options);
+            }
+            });
+        });
+    </script>
+</body>
+</html>
