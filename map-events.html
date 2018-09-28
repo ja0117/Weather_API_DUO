@@ -23,8 +23,8 @@
         height: 200%;
     }
         .container {
-            height: 50%;
-            width: 50%;
+            height: 500px;
+            width: 500px;
         }
     </style>
 </head>
@@ -73,16 +73,22 @@
 
                 // Create the data table.
                 
-                for (var j = 0; j < 50; j++) {
-                    var temp = resp.list[j].main.temp;
+                    var data = new google.visualization.DataTable()
+                        data.addColumn('string', 'Time');
+                        data.addColumn('number', 'Temp');
+                        data.addColumn('number', 'Temp max');
+                        data.addColumn('number', 'Humidity');
+                for (var j = 0; j < resp.list.length; j++) {
+                    var temp = resp.list[j].dt_txt;
                     console.log(temp);
-                    var data = new google.visualization.DataTable([
-                        [temp],
-                    ]);
+                          data.addRows([
+                            [resp.list[j].dt_txt, resp.list[j].main.temp, resp.list[j].main.temp_max, resp.list[j].main.humidity],
+                          ]);
+                        // ]);
                 }
 
                 // Set chart options
-                var options = {'title':'weather in 5 days Zwolle',
+                var options = {'title':'weather in 5 days',
                     'width':1400,
                     'height':400
                 };
