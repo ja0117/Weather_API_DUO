@@ -38,7 +38,7 @@
         });
         $http({
             method:"GET",
-            url:"http://api.openweathermap.org/data/2.5/forecast?q=zwolle&APPID=0c9d7a006a838a322f66170b9a7ff62c&units=metric&lang=nl"
+            url:"http://api.openweathermap.org/data/2.5/forecast?q=zwolle&APPID=&units=metric&lang=nl"
         }).then(function (respond) {
             $scope.weather = respond.data.list;
             console.log(respond.data.list);
